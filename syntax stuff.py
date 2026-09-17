@@ -1,7 +1,0 @@
-project="Morse Translator"
-version=1
-dot_ms=100
-
-print(type(version))
-print(f"{project} v{version}")
-print(f"Dot{dot_ms} ms, dash{dot_ms*3} ms")
