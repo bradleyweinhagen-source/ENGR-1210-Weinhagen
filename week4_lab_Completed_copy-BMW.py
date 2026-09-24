@@ -58,7 +58,7 @@ for symbol in test_symbols:
 # -- ANCHOR QUESTIONS ------------------------------------------------------
 # Q1. The chain checks '.', then '-', then ' ', then else. What happens if
 #     a symbol matches the FIRST branch — do the others still get checked?
-# No the code will stop checking when it recives its first match.
+# No the code will stop checking when it receives its first match.
 
 # Q2. Why do we need the final 'else' (unknown)? What real input might land
 # There needs to be an `else` output for any output that is unexpected and does not match any other input.
