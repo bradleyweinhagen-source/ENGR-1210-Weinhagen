@@ -52,6 +52,7 @@ for grade in grades_to_test:
 #   60    | Keep working at it.  | Keep working at it |Pass     
 #   45    | Keep working at it.  | Keep working at it |Pass    
 
+# a) Input 80 exposed the bug. b) The original code was wrong because there was no = sign in the elif grade > 80, causing 80 to output the wrong result.
 
 # =============================================================================
 # BUG 2 - User Check
@@ -60,14 +61,15 @@ for grade in grades_to_test:
 # should NOT -- one test case alone won't reveal this one.
 # =============================================================================
 print("\n--- User Check ---")
-approved_users = ["admin", "natalie", "carlos", "priya","brad"]
+approved_users = ["admin", "natalie", "carlos", "priya","brad","tom"]
 
-users_to_test = ["admin", "guest", "natalie", "hacker","brad"]     # <-- add your own
+users_to_test = ["admin", "guest", "natalie", "hacker","brad","tom"]     # <-- add your own
 for current_user in users_to_test:
     if current_user not in approved_users:
         print(f"  WARNING: '{current_user}' is not an approved user!")
     else:
         print(f"  Welcome, {current_user}!")
+
 
 # TEST CASE TABLE  (fill in ACTUAL, then mark PASS or FAIL)
 #   INPUT   | EXPECTED                                   | ACTUAL                                          | PASS?
@@ -76,7 +78,9 @@ for current_user in users_to_test:
 #   natalie | Welcome, natalie!                          | WARNING: 'natalie' is not an approved user!     |Fail
 #   hacker  | WARNING: 'hacker' is not an approved user! | Welcome, hacker!                                |Fail
 #   brad    | Welcome, brad!                             | WARNING: 'brad' is not an approved user!        |Fail
+#   tom     | Welcome, tom!                              | WARNING: 'tom' is not an approved user!         |Fail
 
+# a) Input admin exposed the bug. b) The original code was wrong because if current_users were in the approved list, it would output that the approved users were not approved.
 
 # =============================================================================
 # BUG 3 - Stage of Life
@@ -86,7 +90,7 @@ for current_user in users_to_test:
 # =============================================================================
 print("\n--- Stage of Life ---")
 
-ages_to_test = [1, 5, 12, 13, 15, 19, 20, 45, 100]      # <-- add your own
+ages_to_test = [1, 5, 12, 13, 15, 19, 20, 45,50, 100]      # <-- add your own
 for age in ages_to_test:
     if age < 2:
         stage = "infant"
@@ -108,9 +112,10 @@ for age in ages_to_test:
 #   19    | teenager | adult        | Fail
 #   20    | adult    | adult        | Pass
 #   45    | adult    | adult        | Pass
+#   50    | adult    | adult        | Pass
 #   100   | adult    | adult        | Pass
  
-
+# a) Input 13 exposed the bug. b) The original code was wrong because the third branch repeats "elif age < 13", so the "teenager" line can never run.
 # =============================================================================
 # BUG 4 - Pizza Topping Checker
 # Category: test-case-triggered.  Hint: test the SAME real topping typed with
@@ -119,7 +124,7 @@ for age in ages_to_test:
 print("\n--- Pizza Topping Checker ---")
 available_toppings = ["Pepperoni", "Mushrooms", "Green Peppers", "Olives"]
 
-requests_to_test = ["Pepperoni", "Mushrooms", "mushrooms", "Pineapple", "Cheese"]   # <-- add your own
+requests_to_test = ["Pepperoni", "Mushrooms", "mushrooms", "Pineapple", "Cheese", "Bacon"]   # <-- add your own
 for requested_topping in requests_to_test:
     if requested_topping == available_toppings[0]:
         print("  Adding pepperoni.")
@@ -139,13 +144,14 @@ for requested_topping in requests_to_test:
 #   mushrooms | Adding mushrooms.               | Sorry, we don't have mushrooms.      | Fail
 #   Pineapple | Sorry, we don't have Pineapple. | Sorry, we don't have Pineapple.      | Pass
 #   Cheese    | Sorry, we don't have Cheese.    | Sorry, we don't have Cheese.         | Pass 
+#   Bacon     | Sorry, we don't have Bacon.     | Sorry, we don't have Bacon.          | Pass 
 
-
+# a) Input mushrooms exposed the bug. b) The original code was wrong because == is case-sensitive, so "mushrooms" does not equal "Mushrooms".
 # =============================================================================
 # WHEN YOU ARE DONE
-#   [ ] Every table has ACTUAL filled in and PASS/FAIL marked
-#   [ ] You added at least two of your own test cases to each section
-#   [ ] You fixed each bug and re-ran until every row PASSES
-#   [ ] For each bug you can say (a) which test case exposed it and
+#   [x] Every table has ACTUAL filled in and PASS/FAIL marked
+#   [x] You added at least two of your own test cases to each section
+#   [x] You fixed each bug and re-ran until every row PASSES
+#   [x] For each bug you can say (a) which test case exposed it and
 #       (b) why the original code was wrong
 # =============================================================================
