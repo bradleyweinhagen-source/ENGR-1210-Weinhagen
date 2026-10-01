@@ -128,7 +128,7 @@ for pattern in encoded_phrase:
         decoded_phrase.append(DECODE_MAP.get(pattern,'?'))
 decoded_phrase = ''.join(decoded_phrase)
 print(f"Decoded back   -> '{decoded_phrase}'")
-print(f"Round Trip Mached:{decoded_phrase == phrase.upper()}")
+print(f"Round Trip Matched:{decoded_phrase == phrase.upper()}")
 # =============================================================================
 # SECTION 4 — STRETCH
 # =============================================================================
