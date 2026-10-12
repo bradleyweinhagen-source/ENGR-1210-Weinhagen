@@ -1,0 +1,211 @@
+# =============================================================================
+# ENGR1210 — Morse Code Translator Project
+# Week 6 Lab: User Input and while Loops
+# Chapter 7 — Python Crash Course, 3rd Edition
+#
+# Standalone script — the LAST week before "The Great Refactor."
+# Still no functions and no imports. New tools: input() and while loops.
+# This week your translator becomes INTERACTIVE, and you start turning
+# measured signal durations back into dots, dashes, and gaps.
+#
+# NOTE: this file asks for keyboard input, so RUN it (F5) and type at the
+# prompts. Type 'quit' to leave the loop.
+# =============================================================================
+
+# --- Carried forward: build both lookup dictionaries from the codebook -------
+CODEBOOK = [
+    ('A', '.-'),   ('B', '-...'), ('C', '-.-.'), ('D', '-..'),  ('E', '.'),
+    ('F', '..-.'), ('G', '--.'),  ('H', '....'), ('I', '..'),   ('J', '.---'),
+    ('K', '-.-'),  ('L', '.-..'), ('M', '--'),   ('N', '-.'),   ('O', '---'),
+    ('P', '.--.'), ('Q', '--.-'), ('R', '.-.'),  ('S', '...'),  ('T', '-'),
+    ('U', '..-'),  ('V', '...-'), ('W', '.--'),  ('X', '-..-'), ('Y', '-.--'),
+    ('Z', '--..'),
+]
+ENCODE_MAP = {letter: pattern for (letter, pattern) in CODEBOOK}
+# Reverse map for decoding: pattern -> letter (both maps are given to you).
+DECODE_MAP = {pattern: letter for (letter, pattern) in CODEBOOK}
+
+DOT_MS = 100   # base unit, carried forward (boundaries are multiples of it)
+
+
+# =============================================================================
+# SECTION 1 — ANCHOR
+# =============================================================================
+print("=" * 52)
+print("SECTION 1: ANCHOR — An Interactive Encoder")
+print("=" * 52)
+print("Type a message to encode. Type 'quit' to stop.\n")
+
+# A while loop repeats as long as its condition stays True. We use a
+# 'sentinel' value ('quit') to decide when to stop. (Week 7: this whole
+# loop body becomes a clean function call.)
+while True:
+    text = input("Message> ")
+    if text.lower() == 'quit':
+        print("Goodbye!")
+        break                      # leave the while loop
+
+    encoded = []
+    for character in text.upper():
+        if character == ' ':
+            encoded.append(' ')
+        else:
+            encoded.append(ENCODE_MAP.get(character, '?'))
+    print(f"  Morse: {' '.join(encoded)}\n")
+
+# -- ANCHOR QUESTIONS ------------------------------------------------------
+# Q1. What is the 'sentinel' value here, and what would happen if we forgot
+#     the break? (Careful — that's an infinite loop. Use Ctrl+C to escape.)
+# The sentinel value is quit, and if we forget to add break, the loop will go on forever.
+
+# Q2. Why do we check text.lower() == 'quit' instead of text == 'quit'?
+# In case someone capitalizes quit, otherwise they would not be seen as the same.
+
+# Q3. input() always returns a string. Why does that matter the moment you
+#     ask the user for a NUMBER (see the GUIDED section)?
+#This matters because input() returns a string, so the code needs to convert it to an int() to use it as a number. Otherwise, it could cause an error when doing math with it.
+
+# =============================================================================
+# SECTION 2 — GUIDED
+# =============================================================================
+print("\n" + "=" * 52)
+print("SECTION 2: GUIDED — Classify Received Signal Durations")
+print("=" * 52)
+
+# The RECEIVER measures how long the light was ON or OFF, in milliseconds,
+# and must decide what each measurement means. The boundaries are multiples
+# of DOT_MS:
+#     ON  pulse:   shorter than DOT_MS*2 (200ms) = dot,  otherwise dash
+#     OFF gap:     shorter than DOT_MS*2 = symbol gap (within a letter)
+#                  shorter than DOT_MS*5 (500ms) = letter gap
+#                  DOT_MS*5 or longer = word gap
+#
+# (Week 7: these become classify_pulse() and classify_gap().)
+
+pulse_durations = [55, 105, 180, 240, 300]   # measured ON times (ms)
+gap_durations   = [90, 150, 320, 480, 700]   # measured OFF times (ms)
+
+print("\nPulse (LED ON) classification:")
+for duration in pulse_durations:
+    kind = ""   
+    if duration < DOT_MS * 2: 
+       kind = "dot"
+    else:
+       kind = "dash" 
+    print(f"  {duration:4}ms -> {kind}")
+
+print("\nGap (LED OFF) classification:")
+for duration in gap_durations:
+   
+    kind = ""    
+    if duration < DOT_MS * 2:
+       kind = 'symbol_gap'
+    elif duration < DOT_MS * 5:
+       kind = 'letter_gap'
+    else:
+       kind = 'word_gap'
+    print(f"  {duration:4}ms -> {kind}")
+
+
+# =============================================================================
+# SECTION 3 — EXTENSION
+# =============================================================================
+print("\n" + "=" * 52)
+print("SECTION 3: EXTENSION — An Encode / Decode Menu")
+print("=" * 52)
+
+# Build a small menu that loops until the user chooses to quit:
+#     1) Encode text  -> Morse   (type a message, get dots and dashes)
+#     2) Decode Morse -> text    (type space-separated Morse, get the message)
+#     3) Quit
+# 
+# Use a while loop with input() and an if/elif/else on the menu choice.
+# Re-show the menu after each action.
+#
+#   ENCODE: upper-case the text, then loop each character. Look it up with
+#           ENCODE_MAP.get(char, '?'); use '/' for a space. Join with spaces.
+#   DECODE: split the typed Morse on spaces into tokens, then loop them. Look
+#           each token up with DECODE_MAP.get(token, '?'); turn '/' back into
+#           a space. Join the letters together.
+#   (Both ENCODE_MAP and DECODE_MAP are built for you at the top of the file.)
+#
+# Copying the encode loop from the ANCHOR again is a hint about why functions
+# exist — that's next week.
+
+while True:
+    print("Choose ENCODE(1), DECODE(2), or QUIT(3)")
+    choice = input("Pick 1-3> ")
+
+    if choice == '1':
+           text = input(" Encode Text -> ")
+           
+           encoded =[]
+           for character in text.upper():
+                if character == ' ':
+                    encoded.append('/')
+                else:
+                    encoded.append(ENCODE_MAP.get(character, '?'))
+
+           print(' '.join(encoded))
+
+    elif choice == '2':
+           morse = input(" Decode Text -> ")
+           
+           decoded =[]
+           for token in morse.split():
+                if token == '/':
+                    decoded.append(' ')
+                else:
+                    decoded.append(DECODE_MAP.get(token, '?'))
+
+           print(''.join(decoded))
+
+    elif  choice == '3':
+        break
+
+    else:
+        print('Please pick a number 1 through 3')
+    
+
+# =============================================================================
+# SECTION 4 — STRETCH
+# =============================================================================
+print("\n" + "=" * 52)
+print("SECTION 4: STRETCH — Robust Numeric Input")
+print("=" * 52)
+
+# Ask the user "How many times should I repeat the message?" and keep
+# asking until they enter a valid whole number greater than 0.
+#   - input() returns a string; you'll need int() to convert it.
+#   - A bad entry like "five" will CRASH int() with a ValueError. Instead of
+#     pre-screening the text, wrap the conversion in a try / except block:
+#     try to int() it, and if it raises ValueError, print a message and let
+#     the loop ask again. Only break once you have a whole number > 0.
+#   - Once you have a valid count, encode a fixed message and print its
+#     Morse that many times.
+#
+# Reflect in a comment: this is a "validation loop." Why is catching the error
+# with try / except safer than trusting the first thing the user types?
+#
+# Hint (the shape, not the answer): wrap the risky int() in try, break only
+# after you've confirmed the value is > 0, and handle the except ValueError.
+
+# TODO: implement the validation loop here
+
+
+# =============================================================================
+# CHECKLIST
+#   [x] ANCHOR:    typed messages; 'quit' exits cleanly; answered Q1-Q3
+#   [x] GUIDED:    pulses classify as dot/dash; gaps as symbol/letter/word
+#   [x] EXTENSION: menu ENCODES and DECODES; Quit exits the loop
+#   [ ] STRETCH:   (optional) numeric input is validated before use
+#   [x] I noticed how many times I copy-pasted the encoding loop
+#
+# LOOKING AHEAD — Week 7: THE GREAT REFACTOR
+#   You now have a WORKING translator — but the same encoding loop is
+#   copy-pasted in several places, and everything lives in one giant file.
+#   Next week you learn FUNCTIONS. You'll wrap each piece of logic in a
+#   function, split the project into MODULES (separate .py files), and meet
+#   the hardware layer that finally turns "[LED]" print lines into a real
+#   blinking LED you can run on a Pi Pico. Keep ALL your week 1-6 files.
+# =============================================================================
