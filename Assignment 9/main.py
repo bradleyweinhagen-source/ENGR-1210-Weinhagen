@@ -18,17 +18,15 @@ def blink_pattern(pattern):
     # pattern is one letter, like '...'
     for symbol in pattern:
         if symbol == '.':
-            on_ms = DOT_MS
+            hw.set_led_timed(True, DOT_MS)
+            hw.set_led_timed(False, SYMBOL_GAP_MS)
         elif symbol == '-':
-            on_ms = DASH_MS
+            hw.set_led_timed(True, DASH_MS)
+            hw.set_led_timed(False, SYMBOL_GAP_MS)
         elif symbol == ' ':
             hw.set_led_timed(False, LETTER_GAP_MS)
-            continue
 
-        hw.set_led_timed(True, on_ms)
-        hw.set_led_timed(False, SYMBOL_GAP_MS)
 
-    # Gap between letters
     hw.set_led_timed(False, LETTER_GAP_MS - SYMBOL_GAP_MS)
 
 
